@@ -19,11 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-
-    // ❌ BORRA esto:
-    // TypeOrmModule.forRoot({ ... }),
-
-    // ✅ Deja solo esto:
+    
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
