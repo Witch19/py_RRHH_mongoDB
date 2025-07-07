@@ -18,16 +18,16 @@ export class SolicitudesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.solicitudesService.findOne(+id);
+    return this.solicitudesService.findOne(id);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateData: Partial<CreateSolicitudDto>) {
-    return this.solicitudesService.update(+id, updateData);
+    return this.solicitudesService.update(id, updateData);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.solicitudesService.remove(+id);
+    return this.solicitudesService.remove(id);
   }
 }

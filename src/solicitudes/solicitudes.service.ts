@@ -1,39 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Solicitud } from './entities/solicitude.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { Solicitud, SolicitudDocument } from './schemas/solicitudes.schema';
 import { CreateSolicitudDto } from './dto/create-solicitude.dto';
 
 @Injectable()
 export class SolicitudesService {
   constructor(
-    @InjectRepository(Solicitud)
-    private solicitudRepo: Repository<Solicitud>,
-  ) { }
+    @InjectModel(Solicitud.name)
+    private readonly solicitudModel: Model<SolicitudDocument>,
+  ) {}
 
-  create(createSolicitudDto: CreateSolicitudDto) {
-    const solicitud = this.solicitudRepo.create(createSolicitudDto);
-    return this.solicitudRepo.save(solicitud);
+  create(dto: CreateSolicitudDto) {
+    const solicitud = new this.solicitudModel({
+      ...dto,
+      trabajador: new Types.ObjectId(dto.trabajadorId),
+    });
+    return solicitud.save();
   }
 
   findAll() {
-    return this.solicitudRepo.find({ relations: ['trabajador'] });
+    return this.solicitudModel.find().populate('trabajador').exec();
   }
 
-  findOne(id: number) {
-    return this.solicitudRepo.findOne({
-      where: { id },
-      relations: ['trabajador'],
-    });
-
+  async findOne(id: string) {
+    const solicitud = await this.solicitudModel.findById(id).populate('trabajador').exec();
+    if (!solicitud) throw new NotFoundException('Solicitud no encontrada');
+    return solicitud;
   }
 
-  async update(id: number, updateData: Partial<CreateSolicitudDto>) {
-    await this.solicitudRepo.update(id, updateData);
-    return this.findOne(id);
+  async update(id: string, updateData: Partial<CreateSolicitudDto>) {
+    if (updateData.trabajadorId) {
+      updateData['trabajador'] = new Types.ObjectId(updateData.trabajadorId);
+      delete updateData.trabajadorId;
+    }
+
+    const updated = await this.solicitudModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
+    if (!updated) throw new NotFoundException('Solicitud no encontrada');
+    return updated;
   }
 
-  remove(id: number) {
-    return this.solicitudRepo.delete(id);
+  async remove(id: string) {
+    const deleted = await this.solicitudModel.findByIdAndDelete(id).exec();
+    if (!deleted) throw new NotFoundException('Solicitud no encontrada');
+    return deleted;
   }
 }

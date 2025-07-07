@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsDateString, IsEnum } from 'class-validator';
-import { EstadoSolicitud } from '../entities/solicitude.entity';
+import { IsNotEmpty, IsDateString, IsEnum, IsMongoId } from 'class-validator';
+import { EstadoSolicitud } from '../schemas/solicitudes.schema'; 
 
 export class CreateSolicitudDto {
   @IsNotEmpty()
@@ -15,5 +15,9 @@ export class CreateSolicitudDto {
   fechaFin: string;
 
   @IsEnum(EstadoSolicitud)
-  estado?: EstadoSolicitud; // opcional, por defecto pendiente
+  estado?: EstadoSolicitud; // opcional
+
+  @IsMongoId()
+  @IsNotEmpty()
+  trabajadorId: string; // requerido para establecer la relación
 }

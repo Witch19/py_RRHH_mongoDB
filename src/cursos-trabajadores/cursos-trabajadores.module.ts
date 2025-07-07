@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { CursosTrabajadoresService } from './cursos-trabajadores.service';
 import { CursosTrabajadoresController } from './cursos-trabajadores.controller';
-import { CursosTrabajadores } from './entities/cursos-trabajadores.entity';
+import { CursosTrabajadores, CursosTrabajadoresSchema } from './shemas/cursos-trabajadores.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CursosTrabajadores])],
+  imports: [
+    MongooseModule.forFeature([{ name: CursosTrabajadores.name, schema: CursosTrabajadoresSchema }])
+  ],
   controllers: [CursosTrabajadoresController],
   providers: [CursosTrabajadoresService],
 })

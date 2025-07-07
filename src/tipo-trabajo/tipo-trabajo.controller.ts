@@ -8,10 +8,9 @@ export class TipoTrabajoController {
   constructor(private readonly tipoTrabajoService: TipoTrabajoService) {}
 
   @Post()
-create(@Body() dto: CreateTipoTrabajoDto) {
-  return this.tipoTrabajoService.create(dto);
-}
-
+  create(@Body() dto: CreateTipoTrabajoDto) {
+    return this.tipoTrabajoService.create(dto);
+  }
 
   @Get()
   findAll() {
@@ -20,16 +19,16 @@ create(@Body() dto: CreateTipoTrabajoDto) {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tipoTrabajoService.findOne(+id);
+    return this.tipoTrabajoService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTipoTrabajoDto: UpdateTipoTrabajoDto) {
-    return this.tipoTrabajoService.update(+id, updateTipoTrabajoDto);
+  update(@Param('id') id: string, @Body() updateDto: UpdateTipoTrabajoDto) {
+    return this.tipoTrabajoService.update(id, updateDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tipoTrabajoService.remove(+id);
+    return this.tipoTrabajoService.remove(id);
   }
 }

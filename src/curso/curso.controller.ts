@@ -5,7 +5,7 @@ import { UpdateCursoDto } from './dto/update-curso.dto';
 
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly service: CursoService) {}
+  constructor(private readonly service: CursoService) { }
 
   @Post()
   create(@Body() dto: CreateCursoDto) {
@@ -19,16 +19,17 @@ export class CursoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
+    return this.service.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateCursoDto) {
-    return this.service.update(+id, dto);
+    return this.service.update(id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.service.remove(+id);
+    return this.service.remove(id);
   }
+
 }
